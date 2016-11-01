@@ -1,0 +1,71 @@
+body {
+	background-image: url(../../resource/background.jpg);
+	background-repeat: repeat-x;
+	width: 70%;
+}
+
+div {
+    position: relative;
+    margin:auto;
+}
+.center {
+    position:absolute;
+    top: 40%;
+    width: 115%;
+    text-align: center;
+    font-size: 400%;
+    font-weight: bold;
+}
+
+
+.button1 {
+	position:absolute;
+	display: inline-block;
+    border-radius: 4px;
+    background-color: #f4511e;
+    border: none;
+    color: #FFFFFF;
+    top: 50%;
+    width: 18%;
+    text-align: center;
+    font-size: 30px;
+    padding: 20px;
+    margin: 10px 45%;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    opacity: 0.7;
+    margin-top: 4%;
+    margin-right: 8%;
+    margin-bottom: 5%;
+    margin-left: 14%;
+}
+
+.button1 span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button1 span:after {
+  content: '>>';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -10px;
+  transition: 0.5s;
+}
+
+.button1:hover span {
+  padding-right: 45px;
+}
+
+.button1:hover span:after {
+  opacity: 1;
+  right: 0;
+}
