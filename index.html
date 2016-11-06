@@ -6,14 +6,16 @@
 		<link href="library/css/w3.css" rel="stylesheet" type="text/css">
 	</head>
 	
-	<body>
-		<div class="w3-container w3-amber center w3-myfont" style="opacity: 0.9; margin-left: 10%;">
+	<body style="font-family: 'century gothic';">
+		<div class="w3-container w3-myfont index-center" style="background-color: rgba(204,204,204,0.85);">
  			 <p class="w3-xxxlarge">Food Truck Management System</p>
- 			 <h2 class="w3-xxlarge" style="padding-bottom: 0;">Username:</h2>
- 			 <input style="height:30px;width: 140px;font-size:14pt;" type="text" name="username">
- 			 <h2 class="w3-xxlarge" style="padding-bottom: 0;">Password:</h2>
- 			 <input style="height:30px;width: 140px;font-size:14pt; margin-bottom: 6%;" type="text" name="username"><br>
- 			 <button class="button" type="button" style="margin-bottom: 10%;"><span>Log in</span></button>
+ 			 <input id="username" style="height:30px;width: 170px;font-size:14pt; margin-top: 2%;" placeholder="USERNAME" type="text" name="username">
+ 			 <br> 
+ 			 <span id="usererror" class="w3-text-red"></span><br>
+ 			 <input id="password" style="height:30px;width: 170px;font-size:14pt; margin-top: 2%;" placeholder="PASSWORD" type="password" name="password">
+ 			 <br>
+ 			 <span id="passerror" class="w3-text-red"></span><br>
+ 			 <button id="login" class="button" type="button" style="margin-bottom: 10%; margin-top: 4%;"><span>Log in</span></button>
 		</div>
 	</body>
 </html>
