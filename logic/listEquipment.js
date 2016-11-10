@@ -1,7 +1,8 @@
 
 function initial() {
-	//navigate side bar 
 	$("#logout").on("click",logout);
+	$("#add").on("click",addEquipment);
+	//navigate side bar 
 	$("#goProfile").on("click",goProfile);
 	$("#goStaff").on("click",goStaff);
 	$("#goFood").on("click",goFood);
@@ -9,12 +10,14 @@ function initial() {
 	$("#goMenu").on("click",goMenu);
 	$("#goOrder").on("click",goOrder);
 	
+	showList();
 	resize_sidebar();
-//	showList();
-
 }
 function logout() {
 	window.location.href = "../index.html";
+}
+function addEquipment() {
+	window.location.href = "addEquipment.html";
 }
 function goProfile() {
 	window.location.href = "../page/listEquipment.html";
@@ -37,7 +40,7 @@ function goOrder() {
 
 //show all items in the Equipment table
 function showList() {
-	
+	var table = $(".w3-table");
 	$.ajax({
 		type:"get",
 		url:"http://shawnluxy.ddns.net:80/equipment",
@@ -49,12 +52,13 @@ function showList() {
 				var name = data[i].NAME;
 				var quantity = data[i].QUANTITY;
 				var price = data[i].PRICE;
-//				$(".w3-table").innerHTML = "<tr>
-//					<td class="w3-col l3 w3-center">"+ name +"</td>
-//	 				<td class="w3-col l3 w3-center">2</td>
-//	 				<td class="w3-col l3 w3-center">$30.00</td>
-//	 				<td class="w3-col l3 w3-center"><i class="glyphicon glyphicon-pencil w3-hover-black" style="margin-right: 2%;"></i><i class="glyphicon glyphicon-trash w3-hover-black"></i></td>
-//				</tr>";
+				var row = $('<tr></tr>').appendTo(table);
+				$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(name).appendTo(row);
+				$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(quantity).appendTo(row);
+				$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(price).appendTo(row);
+				var lastcol = $('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).appendTo(row);
+				var pencil = $('<i></i>').attr({class: ["glyphicon", "glyphicon-pencil", "w3-hover-black"].join(' ')}).attr('style', 'margin-right: 2%').appendTo(lastcol);
+				var trash = $('<i></i>').attr({class: ["glyphicon", "glyphicon-trash", "w3-hover-black"].join(' ')}).appendTo(lastcol);
 			}
 		},
 		error:function(type){
