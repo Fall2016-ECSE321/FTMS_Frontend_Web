@@ -1,7 +1,10 @@
 
+var EquipmentList = [];
+
 function initial() {
+	//navigate buttons
 	$("#logout").on("click",logout);
-	$("#add").on("click",addEquipment);
+	$(".glyphicon-plus").on("click",addEquipment);
 	//navigate side bar 
 	$("#goProfile").on("click",goProfile);
 	$("#goStaff").on("click",goStaff);
@@ -12,18 +15,22 @@ function initial() {
 	
 	showList();
 	resize_sidebar();
+	deleteEquip();
+	editEquip();
 }
+
 function logout() {
 	window.location.href = "../index.html";
 }
 function addEquipment() {
 	window.location.href = "addEquipment.html";
 }
+
 function goProfile() {
 	window.location.href = "../page/listEquipment.html";
 }
 function goStaff() {
-	window.location.href = "../page/listEquipment.html";
+	window.location.href = "../page/listStaff.html";
 }
 function goFood() {
 	window.location.href = "../page/listEquipment.html";
@@ -44,10 +51,11 @@ function showList() {
 	$.ajax({
 		type:"get",
 		url:"http://shawnluxy.ddns.net:80/equipment",
-		async:true,
+		async:false,
 		timeout:10000,
 		dataType:'json',
 		success:function(data) {
+			EquipmentList = data;
 			for(var i=0; i<data.length; i++) {
 				var name = data[i].NAME;
 				var quantity = data[i].QUANTITY;
@@ -57,14 +65,53 @@ function showList() {
 				$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(quantity).appendTo(row);
 				$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(price).appendTo(row);
 				var lastcol = $('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).appendTo(row);
-				var pencil = $('<i></i>').attr({class: ["glyphicon", "glyphicon-pencil", "w3-hover-black"].join(' ')}).attr('style', 'margin-right: 2%').appendTo(lastcol);
-				var trash = $('<i></i>').attr({class: ["glyphicon", "glyphicon-trash", "w3-hover-black"].join(' ')}).appendTo(lastcol);
+				$('<i></i>').attr({class: ["glyphicon", "glyphicon-pencil", "w3-hover-black"].join(' ')}).attr('style', 'margin-right: 2%').appendTo(lastcol);
+				$('<i></i>').attr({class: ["glyphicon", "glyphicon-trash", "w3-hover-black"].join(' ')}).appendTo(lastcol);
 			}
 		},
-		error:function(type){
+		error:function(type) {
 			alert("timeout");
 		},
 	});
+}
+//delete chosen item
+function deleteItem(item) {
+	$.ajax({
+		type:"",
+		url:"",
+		async:false,
+		timeout:5000,
+		success:function(data) {
+			
+		},
+		error:function() {
+			alert("timeout");
+		},
+	});
+}
+
+function deleteEquip() {
+	var trash = $(".glyphicon-trash");
+	for(var i=0; i<trash.length; i++) {
+		trash[i].addEventListener("click",function(index){
+			return function (){
+				var equip = EquipmentList[index];
+				console.log(equip);
+			};
+		}(i), true);
+	}
+}
+function editEquip() {
+	var pencil = $(".glyphicon-pencil");
+	for(var i=0; i<pencil.length; i++) {
+		pencil[i].addEventListener("click",function(index){
+			return function (){
+				var equip = EquipmentList[index];
+				localStorage.setItem("Picked", JSON.stringify(equip));
+				window.location.href = "addEquipment.html";
+			};
+		}(i), true);
+	}
 }
 
 //fit the height of sidebar to window size
