@@ -24,6 +24,7 @@ function logout() {
 }
 function addEquipment() {
 	window.location.href = "addEquipment.html";
+	localStorage.setItem("Picked", "null");
 }
 
 function goProfile() {
