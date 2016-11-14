@@ -30,48 +30,52 @@
 		
 		<div class="w3-col l11 w3-container w3-myfont index-center w3-dark-grey w3-padding" style="opacity: 0.9; width: 60%; margin-left: 15%; margin-top: 8%; height:auto; position: relative;">
 			<p class="w3-xlarge w3-margin-bottom" style="color: white; padding-top: 15px;">ORDER INFO</p>
+			 <div style="margin-top: 4%;">
+				<div class="w3-col l3 w3-dark-grey">
+					<p>ORDER ID :</p> 
+				</div>
+				
+				<div class="w3-col l2 w3-dark-grey">
+					<p id="orderID">123456789</p>
+				</div>
+				
+				<div class="w3-col l3 w3-dark-grey">
+						<p>STATUS : </p>
+				</div>
+				<div class="w3-col l2 w3-dark-grey w3-left-align">
+					<select id="status"  class="w3-select w3-border" name="option" style="padding: 4px 0;">
+						<option value="" disabled selected>Choose status</option>
+						<option value="1">In delivery</option>
+						<option value="2">delivered</option>
+					</select> 
+				</div>
+			</div><br>
 			
-			<div class="w3-col l3 w3-center w3-dark-grey">
-					<p>ORDER # :</p> 
-			</div>
-			
-			<div class="w3-col l2 w3-dark-grey">
-				<select id="orderID"  class="w3-select w3-border" name="option" style="padding: 4px 0;">
-					<option value="" disabled selected>Choose orders#</option>
-					<option value="1">00001</option>
-					<option value="2">00002</option>
-					<option value="3">00003</option>
-				</select>
-			</div>
-			
-			<div class="w3-col l12 w3-dark-grey w3-margin-bottom">
-					<p class="w3-left-align"></p>
-			</div>
-			<br>
-			
-			<div class="w3-col l3 w3-dark-grey">
-					<p>DISHES :</p> 
-			</div>
-			
-			<div class="w3-col l2 w3-dark-grey">
-				<select class="w3-select w3-border" name="option" style="padding: 4px 0;">
-					<option value="" disabled selected>Choose dishes</option>
-					<option value="1">fries</option>
-					<option value="2">chicken strips</option>
-					<option value="3">coke</option>
-				</select>
-			</div>
-			
-			<div class="w3-col l2 w3-dark-grey w3-right-align">
-				<p>QUANTITY : </p> 
-			</div>
-			
-			<div class="w3-col l3 w3-dark-grey w3-left-align">
-				<input id="dishesQuan" class="w3-border w3-text-black" type="text" style="width: 12%; height: 12%; margin-left: 3%;"/> 
-			</div>
-			
-			<div class="w3-col l2 w3-dark-grey w3-left-align">
-				<i class="glyphicon glyphicon-plus w3-hover-black"></i>
+			<div style="margin-top: 4%;">
+				<div class="w3-col l3 w3-dark-grey">
+						<p>DISHES :</p> 
+				</div>
+				
+				<div class="w3-col l2 w3-dark-grey w3-left-align">
+					<select id="dishes" class="w3-select w3-border" name="option" style="padding: 4px 0;">
+						<option value="" disabled selected>Choose dishes</option>
+						<option value="1">fries</option>
+						<option value="2">chicken strips</option>
+						<option value="3">coke</option>
+					</select>
+				</div>
+				
+				<div class="w3-col l3 w3-dark-grey">
+					<p>QUANTITY : </p> 
+				</div>
+				
+				<div class="w3-col l2 w3-dark-grey w3-left-align">
+					<input id="dishesQuan" class="w3-border w3-text-black" type="text" style="width: 20%; height: 12%; margin-left: 3%;"/> 
+				</div>
+				
+				<div class="w3-col l2 w3-dark-grey">
+					<i class="glyphicon glyphicon-plus w3-hover-black"></i>
+				</div>	
 			</div>
 			<br>
 			

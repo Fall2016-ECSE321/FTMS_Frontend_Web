@@ -30,9 +30,23 @@ function change() {
 	newEquip.NAME = $("#name").val();
 	newEquip.QUANTITY = $("#quantity").val();
 	newEquip.PRICE = $("#price").val();
-	if(newitem) {
-		
-	} else {
+	alert("ERROR");
+//	if(newitem) {
+//		$.ajax({
+//			type:"post",
+//			url:"http://shawnluxy.ddns.net:80/add_equipment",
+//			contentType:"application/x-www-form-urlencoded",
+//			data:newEquip,
+//			async:false,
+//			timeout:5000,
+//			success:function(data) {
+//				
+//			},
+//			error:function(type) {
+//				alert("timeout");
+//			},
+//		});			
+//	} else {
 //		$.ajax({
 //			type:"put",
 //			url:"",
@@ -47,6 +61,6 @@ function change() {
 //				alert("timeout");
 //			},
 //		});	
-	}
+//	}
 	
 }

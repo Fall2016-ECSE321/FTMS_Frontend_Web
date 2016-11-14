@@ -28,7 +28,7 @@ function addEquipment() {
 }
 
 function goProfile() {
-	window.location.href = "../page/listEquipment.html";
+	window.location.href = "../page/viewProfile.html";
 }
 function goStaff() {
 	window.location.href = "../page/listStaff.html";
