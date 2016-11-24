@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 		
 		<script src="../library/js/jquery.js"></script>
+		<script src="../logic/addFood.js"></script>
 		
 	</head>
 	
@@ -18,7 +19,7 @@
 			<button id="logout" class="w3-display-topright w3-hover-blue-grey w3-text-black w3-border" style="margin-top: 10px; margin-right: 5px; height: 50%;">LOG OUT</button>	
 		</div>
 		
-		<div id = "side-bar" class="w3-display-container w3-col l1 w3-dark-grey" style="height: 150vh; width: 10%; opacity: 0.9;">
+		<div id = "side-bar" class="w3-display-container w3-col l1 w3-dark-grey" style="height: 100vh; width: 10%; opacity: 0.9;">
 			<ul class="w3-ul w3-hoverable" style="color: white; text-align: center;">
 				<li id ="goProfile">PROFILE</li>
 				<li id ="goStaff">STAFF</li>
@@ -38,6 +39,9 @@
 				<div class="w3-col l4 w3-dark-grey">
 					<input id="foodName" class="w3-text-black" type="text" style="width: 80%;">
 				</div>
+				<div class="w3-col l5 w3-dark-grey w3-left-align">
+					<span id="nameError" style="color: orange;"></span>
+				</div>
 			</div><br>
 			
 			<div style="margin-left: 3%; margin-top: 4%;">
@@ -47,6 +51,9 @@
 				<div class="w3-col l4 w3-dark-grey">
 					<input id="foodQuantity" class="w3-text-black" type="text" style="width: 80%;">
 				</div>
+				<div class="w3-col l5 w3-dark-grey w3-left-align">
+					<span id="quantityError" style="color: orange;"></span>
+				</div>
 			</div><br>
 			
 			<div style="margin-left: 3%; margin-top: 4%;">
@@ -55,6 +62,9 @@
 				</div>
 				<div class="w3-col l4 w3-dark-grey">
 					<input id="foodPrice" class="w3-text-black" type="text" style="width: 80%;">
+				</div>
+				<div class="w3-col l5 w3-dark-grey w3-left-align">
+					<span id="priceError" style="color: orange;"></span>
 				</div>
 			</div><br>
 			

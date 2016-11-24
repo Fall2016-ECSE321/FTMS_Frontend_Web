@@ -58,3 +58,13 @@ body {
 table {
     table-layout: fixed;
 }
+
+.w3-ul, .glyphicon {
+	cursor: pointer;
+}
+
+.underline {
+	text-decoration: underline;
+	cursor: pointer;
+}
+

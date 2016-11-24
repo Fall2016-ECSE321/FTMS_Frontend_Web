@@ -23,7 +23,10 @@ function login() {
 			else if(data == "WRONG PASSWORD") {
 				$("#passerror").text("WRONG PASSWORD");}
 			else {
-				window.location.href = "page/listEquipment.html";}
+				localStorage.setItem("userID", data.toString());
+				window.location.href = "page/viewProfile.html";
+				localStorage.removeItem("viewPicked");
+			}
 		},
 		error:function(type){
 			alert("timeout");

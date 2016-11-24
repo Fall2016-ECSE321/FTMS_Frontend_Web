@@ -1,9 +1,10 @@
-var EquipmentList = [];
+
+var FoodList = [];
 
 function initial() {
 	//navigate buttons
 	$("#logout").on("click",logout);
-	$(".glyphicon-plus").on("click",addEquipment);
+	$(".glyphicon-plus").on("click",addFood);
 	//navigate side bar 
 	$("#goProfile").on("click",goProfile);
 	$("#goStaff").on("click",goStaff);
@@ -14,15 +15,15 @@ function initial() {
 	
 	showList();
 	resize_sidebar();
-	deleteEquip();
-	editEquip();
+	deleteFood();
+	editFood();
 }
 
 function logout() {
 	window.location.href = "../index.html";
 }
-function addEquipment() {
-	window.location.href = "../page/addEquipment.html";
+function addFood() {
+	window.location.href = "../page/addFood.html";
 	localStorage.removeItem("Picked");
 }
 
@@ -46,18 +47,18 @@ function goOrder() {
 	window.location.href = "../page/listOrder.html";
 }
 
-//show all items in the Equipment table
+//show all items in the Food table
 function showList() {
 	var table = $(".w3-table");
 	$.ajax({
 		type:"get",
-		url:"http://shawnluxy.ddns.net:80/equipment",
+		url:"http://shawnluxy.ddns.net:80/food",
 		async:false,
 		timeout:10000,
 		success:function(data) {
 			if(data != "empty") {
 				data = JSON.parse(data);
-				EquipmentList = data;
+				FoodList = data;
 				for(var i=0; i<data.length; i++) {
 					var name = data[i].NAME;
 					var quantity = data[i].QUANTITY;
@@ -77,11 +78,12 @@ function showList() {
 		},
 	});
 }
+
 //delete chosen item
 function deleteItem(item) {
 	$.ajax({
 		type:"delete",
-		url:"http://shawnluxy.ddns.net:80/delete_equipment/" + item.NAME,
+		url:"http://shawnluxy.ddns.net:80/delete_food/" + item.NAME,
 		async:false,
 		timeout:5000,
 		beforeSend:function(xhr){
@@ -89,7 +91,7 @@ function deleteItem(item) {
 		},
 		success:function(data) {
 			alert(data);
-			goEquipment();
+			goFood();
 		},
 		error:function() {
 			alert("timeout");
@@ -97,25 +99,25 @@ function deleteItem(item) {
 	});
 }
 //add event to each icon
-function deleteEquip() {
+function deleteFood() {
 	var trash = $(".glyphicon-trash");
 	for(var i=0; i<trash.length; i++) {
 		trash[i].addEventListener("click",function(index){
 			return function (){
-				var equip = EquipmentList[index];
-				deleteItem(equip);
+				var food = FoodList[index];
+				deleteItem(food);
 			};
 		}(i), true);
 	}
 }
-function editEquip() {
+function editFood() {
 	var pencil = $(".glyphicon-pencil");
 	for(var i=0; i<pencil.length; i++) {
 		pencil[i].addEventListener("click",function(index){
 			return function (){
-				var equip = EquipmentList[index];
-				localStorage.setItem("Picked", JSON.stringify(equip));
-				window.location.href = "addEquipment.html";
+				var food = FoodList[index];
+				localStorage.setItem("Picked", JSON.stringify(food));
+				window.location.href = "../page/addFood.html";
 			};
 		}(i), true);
 	}

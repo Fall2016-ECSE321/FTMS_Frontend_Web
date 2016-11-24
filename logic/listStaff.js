@@ -1,9 +1,10 @@
-var EquipmentList = [];
+
+var staffList = [];
 
 function initial() {
 	//navigate buttons
 	$("#logout").on("click",logout);
-	$(".glyphicon-plus").on("click",addEquipment);
+	$(".glyphicon-plus").on("click",addStaff);
 	//navigate side bar 
 	$("#goProfile").on("click",goProfile);
 	$("#goStaff").on("click",goStaff);
@@ -14,16 +15,15 @@ function initial() {
 	
 	showList();
 	resize_sidebar();
-	deleteEquip();
-	editEquip();
+	viewStaff();
+	deleteStaff();
 }
 
 function logout() {
 	window.location.href = "../index.html";
 }
-function addEquipment() {
-	window.location.href = "../page/addEquipment.html";
-	localStorage.removeItem("Picked");
+function addStaff() {
+	window.location.href = "../page/addStaff.html";
 }
 
 function goProfile() {
@@ -51,24 +51,26 @@ function showList() {
 	var table = $(".w3-table");
 	$.ajax({
 		type:"get",
-		url:"http://shawnluxy.ddns.net:80/equipment",
+		url:"http://shawnluxy.ddns.net:80/staff",
 		async:false,
 		timeout:10000,
 		success:function(data) {
 			if(data != "empty") {
 				data = JSON.parse(data);
-				EquipmentList = data;
+				staffList = data;
 				for(var i=0; i<data.length; i++) {
 					var name = data[i].NAME;
-					var quantity = data[i].QUANTITY;
-					var price = data[i].PRICE;
+					var position = data[i].ROLE;
 					var row = $('<tr></tr>').appendTo(table);
+					var firstcol = $('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).appendTo(row);
+					firstcol.append('<img src="../resource/user.jpg" class="w3-round-jumbo" style="width: 20%;">');
 					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(name).appendTo(row);
-					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(quantity).appendTo(row);
-					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(price).appendTo(row);
+					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(position).appendTo(row);
 					var lastcol = $('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).appendTo(row);
-					$('<i></i>').attr({class: ["glyphicon", "glyphicon-pencil", "w3-hover-black"].join(' ')}).attr('style', 'margin-right: 2%').appendTo(lastcol);
-					$('<i></i>').attr({class: ["glyphicon", "glyphicon-trash", "w3-hover-black"].join(' ')}).appendTo(lastcol);
+					$('<button></button>').addClass("w3-hover-blue-grey w3-text-black w3-border").attr('style', 'padding-left: 5%; padding-right: 5%; margin-right: 2%').text("View").appendTo(lastcol);
+					if(position != "Manager"){
+						$('<button></button>').addClass("w3-hover-blue-grey w3-text-black w3-border").attr('style', 'padding-left: 5%; padding-right: 5%;').text("Delete").appendTo(lastcol);	
+					}
 				}	
 			}
 		},
@@ -81,7 +83,7 @@ function showList() {
 function deleteItem(item) {
 	$.ajax({
 		type:"delete",
-		url:"http://shawnluxy.ddns.net:80/delete_equipment/" + item.NAME,
+		url:"http://shawnluxy.ddns.net:80/delete_staff/" + item.ID,
 		async:false,
 		timeout:5000,
 		beforeSend:function(xhr){
@@ -89,7 +91,7 @@ function deleteItem(item) {
 		},
 		success:function(data) {
 			alert(data);
-			goEquipment();
+			goStaff();
 		},
 		error:function() {
 			alert("timeout");
@@ -97,25 +99,25 @@ function deleteItem(item) {
 	});
 }
 //add event to each icon
-function deleteEquip() {
-	var trash = $(".glyphicon-trash");
+function deleteStaff() {
+	var trash = $('button').filter(function(i){ return $(this).text() === "Delete"; });
 	for(var i=0; i<trash.length; i++) {
 		trash[i].addEventListener("click",function(index){
 			return function (){
-				var equip = EquipmentList[index];
-				deleteItem(equip);
+				var staff = staffList[index];
+				deleteItem(staff);
 			};
 		}(i), true);
 	}
 }
-function editEquip() {
-	var pencil = $(".glyphicon-pencil");
-	for(var i=0; i<pencil.length; i++) {
-		pencil[i].addEventListener("click",function(index){
+function viewStaff() {
+	var view = $('button').filter(function(i){ return $(this).text() === "View"; });
+	for(var i=0; i<view.length; i++) {
+		view[i].addEventListener("click",function(index){
 			return function (){
-				var equip = EquipmentList[index];
-				localStorage.setItem("Picked", JSON.stringify(equip));
-				window.location.href = "addEquipment.html";
+				var staff = staffList[index];
+				localStorage.setItem("viewPicked", JSON.stringify(staff));
+				window.location.href = "viewProfile.html";
 			};
 		}(i), true);
 	}

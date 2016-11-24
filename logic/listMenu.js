@@ -1,9 +1,9 @@
-var EquipmentList = [];
+var MenuList = [];
 
 function initial() {
 	//navigate buttons
 	$("#logout").on("click",logout);
-	$(".glyphicon-plus").on("click",addEquipment);
+	$(".glyphicon-plus").on("click",addMenu);
 	//navigate side bar 
 	$("#goProfile").on("click",goProfile);
 	$("#goStaff").on("click",goStaff);
@@ -14,15 +14,16 @@ function initial() {
 	
 	showList();
 	resize_sidebar();
-	deleteEquip();
-	editEquip();
+	deleteMenu();
+	editMenu();
+	viewMenu();
 }
 
 function logout() {
 	window.location.href = "../index.html";
 }
-function addEquipment() {
-	window.location.href = "../page/addEquipment.html";
+function addMenu() {
+	window.location.href = "../page/addMenu.html";
 	localStorage.removeItem("Picked");
 }
 
@@ -46,26 +47,26 @@ function goOrder() {
 	window.location.href = "../page/listOrder.html";
 }
 
-//show all items in the Equipment table
+//show all items in the Menu table
 function showList() {
 	var table = $(".w3-table");
 	$.ajax({
 		type:"get",
-		url:"http://shawnluxy.ddns.net:80/equipment",
+		url:"http://shawnluxy.ddns.net:80/menu",
 		async:false,
 		timeout:10000,
 		success:function(data) {
 			if(data != "empty") {
 				data = JSON.parse(data);
-				EquipmentList = data;
+				MenuList = data;
 				for(var i=0; i<data.length; i++) {
 					var name = data[i].NAME;
-					var quantity = data[i].QUANTITY;
 					var price = data[i].PRICE;
+					var popularity = data[i].POPULARITY;
 					var row = $('<tr></tr>').appendTo(table);
-					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(name).appendTo(row);
-					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(quantity).appendTo(row);
+					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center", "underline"].join(' ')}).text(name).appendTo(row);
 					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(price).appendTo(row);
+					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(popularity).appendTo(row);
 					var lastcol = $('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).appendTo(row);
 					$('<i></i>').attr({class: ["glyphicon", "glyphicon-pencil", "w3-hover-black"].join(' ')}).attr('style', 'margin-right: 2%').appendTo(lastcol);
 					$('<i></i>').attr({class: ["glyphicon", "glyphicon-trash", "w3-hover-black"].join(' ')}).appendTo(lastcol);
@@ -81,7 +82,7 @@ function showList() {
 function deleteItem(item) {
 	$.ajax({
 		type:"delete",
-		url:"http://shawnluxy.ddns.net:80/delete_equipment/" + item.NAME,
+		url:"http://shawnluxy.ddns.net:80/delete_menu/" + item.ID,
 		async:false,
 		timeout:5000,
 		beforeSend:function(xhr){
@@ -89,7 +90,7 @@ function deleteItem(item) {
 		},
 		success:function(data) {
 			alert(data);
-			goEquipment();
+			goMenu();
 		},
 		error:function() {
 			alert("timeout");
@@ -97,25 +98,37 @@ function deleteItem(item) {
 	});
 }
 //add event to each icon
-function deleteEquip() {
+function deleteMenu() {
 	var trash = $(".glyphicon-trash");
 	for(var i=0; i<trash.length; i++) {
 		trash[i].addEventListener("click",function(index){
 			return function (){
-				var equip = EquipmentList[index];
-				deleteItem(equip);
+				var menu = MenuList[index];
+				deleteItem(menu);
 			};
 		}(i), true);
 	}
 }
-function editEquip() {
+function editMenu() {
 	var pencil = $(".glyphicon-pencil");
 	for(var i=0; i<pencil.length; i++) {
 		pencil[i].addEventListener("click",function(index){
 			return function (){
-				var equip = EquipmentList[index];
-				localStorage.setItem("Picked", JSON.stringify(equip));
-				window.location.href = "addEquipment.html";
+				var menu = MenuList[index];
+				localStorage.setItem("Picked", JSON.stringify(menu));
+				window.location.href = "addMenu.html";
+			};
+		}(i), true);
+	}
+}
+function viewMenu() {
+	var view = $(".underline");
+	for(var i=0; i<view.length; i++) {
+		view[i].addEventListener("click",function(index){
+			return function (){
+				var menu = MenuList[index];
+				localStorage.setItem("Picked", JSON.stringify(menu));
+				window.location.href = "listRecipe.html";
 			};
 		}(i), true);
 	}

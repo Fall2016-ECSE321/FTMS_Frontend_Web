@@ -5,7 +5,7 @@ function initial() {
 	//navigate buttons
 	$("#logout").on("click",logout);
 	$("#change").on("click",change);
-	$("#cancel").on("click",goEquipment);
+	$("#cancel").on("click",goFood);
 	//navigate side bar 
 	$("#goProfile").on("click",goProfile);
 	$("#goStaff").on("click",goStaff);
@@ -44,30 +44,30 @@ function goOrder() {
 
 function showPicked() {
 	if(localStorage.getItem("Picked") != null) {
-		var equip = JSON.parse(localStorage.getItem("Picked"));
-		$("#name").val(equip.NAME);
-		$("#quantity").val(equip.QUANTITY);
-		$("#price").val(equip.PRICE);
+		var food = JSON.parse(localStorage.getItem("Picked"));
+		$("#foodName").val(food.NAME);
+		$("#foodQuantity").val(food.QUANTITY);
+		$("#foodPrice").val(food.PRICE);
 		newitem = false;
-		raw_name = equip.NAME.toString();
+		raw_name = food.NAME.toString();
 	}
 }
 
 function change() {
-	var newEquip = {};
-	newEquip.NAME = $("#name").val();
-	newEquip.QUANTITY = $("#quantity").val();
-	newEquip.PRICE = $("#price").val();
-	newEquip.RAW_NAME = raw_name;
-	//check input validation
-	if(!validate(newEquip.NAME, newEquip.QUANTITY, newEquip.PRICE)){return false;}
+	var newFood = {};
+	newFood.NAME = $("#foodName").val();
+	newFood.QUANTITY = $("#foodQuantity").val();
+	newFood.PRICE = $("#foodPrice").val();
+	newFood.RAW_NAME = raw_name;
+	// check input validation
+	if(!validate(newFood.NAME, newFood.QUANTITY, newFood.PRICE)){return false;}
 
 	if(newitem) {
 		$.ajax({
 			type:"post",
-			url:"http://shawnluxy.ddns.net:80/add_equipment",
+			url:"http://shawnluxy.ddns.net:80/add_food",
 			contentType:"application/x-www-form-urlencoded",
-			data:newEquip,
+			data:newFood,
 			async:false,
 			timeout:5000,
 			beforeSend:function(xhr){
@@ -76,7 +76,7 @@ function change() {
 			success:function(data) {
 				alert(data);
 				if(data == "SUCCESS") {
-					goEquipment();
+					goFood();
 				}
 			},
 			error:function(type) {
@@ -86,9 +86,9 @@ function change() {
 	} else {
 		$.ajax({
 			type:"put",
-			url:"http://shawnluxy.ddns.net:80/update_equipment",
+			url:"http://shawnluxy.ddns.net:80/update_food",
 			contentType:"application/x-www-form-urlencoded",
-			data:newEquip,
+			data:newFood,
 			async:false,
 			timeout:5000,
 			beforeSend:function(xhr){
@@ -97,7 +97,7 @@ function change() {
 			success:function(data) {
 				alert(data);
 				if(data == "SUCCESS") {
-					goEquipment();
+					goFood();
 				}
 			},
 			error:function(type) {
@@ -106,7 +106,7 @@ function change() {
 		});	
 	}
 }
-//validation check
+//valudation check
 function validate(name, quantity, price) {
 	var status = true;
 	var regex1 = /^[0-9]+$/;
