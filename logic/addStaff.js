@@ -46,8 +46,10 @@ function change() {
 	newStaff.AGE = $("#age").val();
 	newStaff.ROLE =capitalizeFirstLetter($("#position").val());
 	newStaff.TEL = $("#number").val().replace(/-/g,"");
+	newStaff.USERNAME = $("#username").val();
+	newStaff.PASSWORD = $("#password").val();
 	//check input validation
-	if(!validate(newStaff.NAME, newStaff.GENDER, newStaff.AGE, newStaff.ROLE, newStaff.TEL)){return false;}
+	if(!validate(newStaff.NAME, newStaff.GENDER, newStaff.AGE, newStaff.ROLE, newStaff.TEL, newStaff.USERNAME, newStaff.PASSWORD)){return false;}
 	//post changes
 	$.ajax({
 		type:"post",
@@ -71,7 +73,7 @@ function change() {
 	});
 }
 //validation check
-function validate(name, gender, age, position, number) {
+function validate(name, gender, age, position, number, username, passwd) {
 	var status = true;
 	var regex1 = /^[0-9]+$/;
 	var rolelist = ["Manager", "Cook", "Cashier", "Wholesaler"];
@@ -114,6 +116,22 @@ function validate(name, gender, age, position, number) {
 		$("#numberError").text("It must be Numbers");status = false;
 	} else {
 		$("#numberError").text("");
+	}
+	// check username input
+	if(username.trim().length == 0) {
+		$("#usernameError").text("Username cannot be Empty");status = false;
+	} else if(username[0].match(regex1)) {
+		$("#usernameError").text("Username cannot start with Number");status = false;
+	} else {
+		$("#usernameError").text("");
+	}
+	// check password input
+	if(passwd.trim().length == 0) {
+		$("#passwdError").text("Password cannot be Empty");status = false;
+	} else if(passwd.length < 6) {
+		$("#passwdError").text("Length cannot be smaller than six");status = false;
+	} else {
+		$("#passwdError").text("");
 	}
 	return status;
 }
