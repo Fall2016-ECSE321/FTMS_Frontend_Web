@@ -63,7 +63,6 @@ function showInfo() {
 				if(data != "empty") {
 					staffInfo = JSON.parse(data)[0];
 					localStorage.setItem("Authorization",staffInfo.ROLE);
-					console.log(staffInfo.ROLE);
 				}
 			},
 			error:function(type) {
@@ -79,7 +78,7 @@ function showInfo() {
 	$("#Position").val(staffInfo.ROLE);
 	$("#Number").val(staffInfo.TEL);
 	//display schedule
-	
+	showSchedule(localStorage.getItem("userID"));
 }
 
 function editInfo() {
@@ -118,7 +117,7 @@ function change() {
 		async:false,
 		timeout:5000,
 		beforeSend:function(xhr){
-			xhr.setRequestHeader("Authorization","Managers");
+			xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
 		},
 		success:function(data) {
 			alert(data);
@@ -135,7 +134,35 @@ function change() {
 }
 
 function showSchedule(id) {
-	
+	var timebox = $(".timebox");
+	for(var t=0; t<timebox.length; t++) {timebox[t].style.backgroundColor = 'rgb(107, 186, 185)';}
+	var d = new Date();
+	$.ajax({
+		type:"get",
+		url:"http://shawnluxy.ddns.net:80/schedule/" + id,
+		async:false,
+		timeout:10000,
+		success:function(data) {
+			if(data != "empty") {
+				data = JSON.parse(data);
+				for(var i =0; i<data.length; i++) {
+					var start_time = (data[i].START_TIME.split(" "))[1].split(":");
+					var end_time = (data[i].END_TIME.split(" "))[1].split(":");
+					var start_date = (data[i].START_TIME.split(" "))[0].split("-");
+					d.setDate(start_date[2])
+					var week_index = d.getDay()-1;
+					var start_index = start_time[0]-9;
+					var end_index = end_time[0]-9;
+					for(var j = start_index; j<end_index; j++) {
+						timebox[week_index+j*5].style.backgroundColor = 'rgb(121, 215, 97)';	
+					}
+				}
+			}
+		},
+		error:function(type) {
+			alert("timeout");
+		},
+	});
 }
 
 function editSchedule(id) {

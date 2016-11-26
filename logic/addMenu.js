@@ -153,7 +153,7 @@ function submit() {
 			async:false,
 			timeout:5000,
 			beforeSend:function(xhr){
-				xhr.setRequestHeader("Authorization","Managers");
+				xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
 			},
 			success:function(data) {
 				message = data;
@@ -173,7 +173,7 @@ function submit() {
 			async:false,
 			timeout:5000,
 			beforeSend:function(xhr){
-				xhr.setRequestHeader("Authorization","Managers");
+				xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
 			},
 			success:function(data) {
 				message = data;
@@ -190,7 +190,7 @@ function submit() {
 				async:false,
 				timeout:5000,
 				beforeSend:function(xhr){
-					xhr.setRequestHeader("Authorization","Managers");
+					xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
 				},
 				success:function(data) {
 					message = data;
@@ -220,7 +220,7 @@ function submit() {
 			async:false,
 			timeout:5000,
 			beforeSend:function(xhr){
-				xhr.setRequestHeader("Authorization","Managers");
+				xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
 			},
 			success:function(data) {
 				message = data;
