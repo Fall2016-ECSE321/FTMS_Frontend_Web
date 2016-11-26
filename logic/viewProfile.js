@@ -1,4 +1,5 @@
 var staffInfo = {};
+var scheduleList = []; 
 
 function initial() {
 	//navigate buttons
@@ -95,12 +96,13 @@ function editInfo() {
 		$(inputs[i]).attr("disabled", false).addClass("w3-border w3-text-black").attr("style", "margin-bottom: 8px; height: 22px");
 	}
 	//edit schedule
-	
+	$(".timebox").on("click",editSchedule);
 	$("#change").on("click",change);
 	$("#cancel").on("click",showInfo);
 }
 function change() {
 	var newStaff = {};
+	newStaff.ID = $("#ID").val();
 	newStaff.NAME = $("#Name").val();
 	newStaff.GENDER = $("#Gender").val().toLowerCase();
 	newStaff.AGE = $("#Age").val();
@@ -132,7 +134,7 @@ function change() {
 	//post changes of schedule
 	
 }
-
+//display personal schedule table
 function showSchedule(id) {
 	var timebox = $(".timebox");
 	for(var t=0; t<timebox.length; t++) {timebox[t].style.backgroundColor = 'rgb(107, 186, 185)';}
@@ -145,6 +147,7 @@ function showSchedule(id) {
 		success:function(data) {
 			if(data != "empty") {
 				data = JSON.parse(data);
+				scheduleList = data;
 				for(var i =0; i<data.length; i++) {
 					var start_time = (data[i].START_TIME.split(" "))[1].split(":");
 					var end_time = (data[i].END_TIME.split(" "))[1].split(":");
@@ -164,8 +167,39 @@ function showSchedule(id) {
 		},
 	});
 }
-
-function editSchedule(id) {
+//enable change color of the box in table
+function editSchedule(e) {
+	var sender = (window.event && window.event.srcElement) || e.target;
+	if (sender.style.backgroundColor == 'rgb(107, 186, 185)'){ //lightblue
+		sender.style.backgroundColor = 'rgb(121, 215, 97)'; //green
+	}
+	else if(sender.style.backgroundColor == 'rgb(121, 215, 97)'){
+		sender.style.backgroundColor = 'rgb(107, 186, 185)'; //green
+	}
+}
+//post new Schedule
+function submitSchedule(id) {
+	var message = "";
+	//delete old schedule
+	for(var i=0; i<scheduleList.length; i++) {
+		$.ajax({
+			type:"delete",
+			url:"http://shawnluxy.ddns.net:80/delete_schedule/" + scheduleList[i].ID,
+			async:false,
+			timeout:5000,
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
+			},
+			success:function(data) {
+				message = data;
+			},
+			error:function() {
+				alert("timeout");
+			},
+		});
+	}
+	if(message !== "SUCCESS") {alert(message);return false;}
+	//add new schedule
 	
 }
 

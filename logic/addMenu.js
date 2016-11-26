@@ -183,7 +183,6 @@ function submit() {
 			},
 		});
 		for(var i=0; i<recipeList.length; i++) {
-			console.log(recipeList[i].ID);
 			$.ajax({
 				type:"delete",
 				url:"http://shawnluxy.ddns.net:80/delete_recipe/" + recipeList[i].ID,
