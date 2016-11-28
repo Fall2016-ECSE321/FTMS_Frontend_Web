@@ -80,6 +80,8 @@ function showList() {
 }
 //delete chosen item
 function deleteItem(item) {
+	var message = "";
+	var recipeList = [];
 	$.ajax({
 		type:"delete",
 		url:"http://shawnluxy.ddns.net:80/delete_menu/" + item.ID,
@@ -89,13 +91,47 @@ function deleteItem(item) {
 			xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
 		},
 		success:function(data) {
-			alert(data);
-			goMenu();
+			message = data;
 		},
 		error:function() {
 			alert("timeout");
 		},
 	});
+	if(message !== "SUCCESS") {alert(message);return false;}
+	$.ajax({
+		type:"get",
+		url:"http://shawnluxy.ddns.net:80/menu/" + item.ID,
+		async:false,
+		timeout:5000,
+		success:function(data) {
+			if(data != "empty") {
+				data = JSON.parse(data);
+				recipeList = data;
+			}
+		},
+		error:function(type) {
+			alert("timeout");
+		},
+	});
+	for(var i=0; i<recipeList.length; i++) {
+		$.ajax({
+			type:"delete",
+			url:"http://shawnluxy.ddns.net:80/delete_recipe/" + recipeList[i].ID,
+			async:false,
+			timeout:5000,
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
+			},
+			success:function(data) {
+				message = data;
+			},
+			error:function() {
+				alert("timeout");
+			},
+		});
+	}
+	alert(message);
+	if(message == "SUCCESS") {goMenu();}
 }
 //add event to each icon
 function deleteMenu() {
@@ -133,7 +169,19 @@ function viewMenu() {
 		}(i), true);
 	}
 }
-
+//Search Site filter
+function searchMenu() {
+	var inputs = $("#search").val().toLowerCase();
+	var target = $(".underline");
+	for(var i=0; i<target.length; i++) {
+		var row = $(target[i]).parent();
+		if($(target[i]).text().toLowerCase().indexOf(inputs) > -1) {
+			row.removeAttr("style");
+		} else {
+			row.attr("style", "display:none");
+		}
+	}
+}
 //fit the height of sidebar to window size
 function resize_sidebar() {
 	if($("#datalist").height() <= $(window).innerHeight()) {

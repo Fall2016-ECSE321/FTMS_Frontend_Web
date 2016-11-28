@@ -64,7 +64,7 @@ function showList() {
 					var row = $('<tr></tr>').appendTo(table);
 					var firstcol = $('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).appendTo(row);
 					firstcol.append('<img src="../resource/user.jpg" class="w3-round-jumbo" style="width: 20%;">');
-					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(name).appendTo(row);
+					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center", "sname"].join(' ')}).text(name).appendTo(row);
 					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(position).appendTo(row);
 					var lastcol = $('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).appendTo(row);
 					$('<button></button>').addClass("w3-hover-blue-grey w3-text-black w3-border").attr('style', 'padding-left: 5%; padding-right: 5%; margin-right: 2%').text("View").appendTo(lastcol);
@@ -122,7 +122,19 @@ function viewStaff() {
 		}(i), true);
 	}
 }
-
+//Search Site filter
+function searchStaff() {
+	var inputs = $("#search").val().toLowerCase();
+	var target = $(".sname");
+	for(var i=0; i<target.length; i++) {
+		var row = $(target[i]).parent();
+		if($(target[i]).text().toLowerCase().indexOf(inputs) > -1) {
+			row.removeAttr("style");
+		} else {
+			row.attr("style", "display:none");
+		}
+	}
+}
 //fit the height of sidebar to window size
 function resize_sidebar() {
 	if($("#datalist").height() <= $(window).innerHeight()) {

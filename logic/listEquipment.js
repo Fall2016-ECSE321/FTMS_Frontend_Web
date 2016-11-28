@@ -63,7 +63,7 @@ function showList() {
 					var quantity = data[i].QUANTITY;
 					var price = data[i].PRICE;
 					var row = $('<tr></tr>').appendTo(table);
-					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(name).appendTo(row);
+					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center", "sname"].join(' ')}).text(name).appendTo(row);
 					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(quantity).appendTo(row);
 					$('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).text(price).appendTo(row);
 					var lastcol = $('<td></td>').attr({class: ["w3-col", "l3", "w3-center"].join(' ')}).appendTo(row);
@@ -120,7 +120,19 @@ function editEquip() {
 		}(i), true);
 	}
 }
-
+//Search Site filter
+function searchEquip() {
+	var inputs = $("#search").val().toLowerCase();
+	var target = $(".sname");
+	for(var i=0; i<target.length; i++) {
+		var row = $(target[i]).parent();
+		if($(target[i]).text().toLowerCase().indexOf(inputs) > -1) {
+			row.removeAttr("style");
+		} else {
+			row.attr("style", "display:none");
+		}
+	}
+}
 //fit the height of sidebar to window size
 function resize_sidebar() {
 	if($("#datalist").height() <= $(window).innerHeight()) {

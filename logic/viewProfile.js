@@ -79,7 +79,7 @@ function showInfo() {
 	$("#Position").val(staffInfo.ROLE);
 	$("#Number").val(staffInfo.TEL);
 	//display schedule
-	showSchedule(localStorage.getItem("userID"));
+	showSchedule(staffInfo.ID);
 }
 
 function editInfo() {
@@ -101,6 +101,7 @@ function editInfo() {
 	$("#cancel").on("click",showInfo);
 }
 function change() {
+	var message = "";
 	var newStaff = {};
 	newStaff.ID = $("#ID").val();
 	newStaff.NAME = $("#Name").val();
@@ -113,7 +114,7 @@ function change() {
 	//post changes of staff
 	$.ajax({
 		type:"put",
-		url:"http://shawnluxy.ddns.net:80/update_equipment",
+		url:"http://shawnluxy.ddns.net:80/update_staff",
 		contentType:"application/x-www-form-urlencoded",
 		data:newStaff,
 		async:false,
@@ -122,23 +123,20 @@ function change() {
 			xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
 		},
 		success:function(data) {
-			alert(data);
-			if(data == "SUCCESS") {
-				goStaff();
-			}
+			message = data;
 		},
 		error:function(type) {
 			alert("timeout");
 		},
 	});
+	if(message !== "SUCCESS") {alert(message);return false;}
 	//post changes of schedule
-	
+	submitSchedule(newStaff.ID);	
 }
 //display personal schedule table
 function showSchedule(id) {
 	var timebox = $(".timebox");
 	for(var t=0; t<timebox.length; t++) {timebox[t].style.backgroundColor = 'rgb(107, 186, 185)';}
-	var d = new Date();
 	$.ajax({
 		type:"get",
 		url:"http://shawnluxy.ddns.net:80/schedule/" + id,
@@ -149,16 +147,19 @@ function showSchedule(id) {
 				data = JSON.parse(data);
 				scheduleList = data;
 				for(var i =0; i<data.length; i++) {
+					var d = new Date();
 					var start_time = (data[i].START_TIME.split(" "))[1].split(":");
 					var end_time = (data[i].END_TIME.split(" "))[1].split(":");
 					var start_date = (data[i].START_TIME.split(" "))[0].split("-");
-					d.setDate(start_date[2])
+					var diff = new Date(start_date[0]+'/'+start_date[1]+'/'+start_date[2]) - new Date(currentDate());
+					diff = diff/1000/3600/24;
+					d.setDate(d.getDate()+diff);
 					var week_index = d.getDay()-1;
 					var start_index = start_time[0]-9;
 					var end_index = end_time[0]-9;
 					for(var j = start_index; j<end_index; j++) {
 						timebox[week_index+j*5].style.backgroundColor = 'rgb(121, 215, 97)';	
-					}
+					}	
 				}
 			}
 		},
@@ -181,26 +182,78 @@ function editSchedule(e) {
 function submitSchedule(id) {
 	var message = "";
 	//delete old schedule
-	for(var i=0; i<scheduleList.length; i++) {
-		$.ajax({
-			type:"delete",
-			url:"http://shawnluxy.ddns.net:80/delete_schedule/" + scheduleList[i].ID,
-			async:false,
-			timeout:5000,
-			beforeSend:function(xhr){
-				xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
-			},
-			success:function(data) {
-				message = data;
-			},
-			error:function() {
-				alert("timeout");
-			},
-		});
+	if(scheduleList.length > 0) {
+		for(var i=0; i<scheduleList.length; i++) {
+			$.ajax({
+				type:"delete",
+				url:"http://shawnluxy.ddns.net:80/delete_schedule/" + scheduleList[i].ID,
+				async:false,
+				timeout:5000,
+				beforeSend:function(xhr){
+					xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
+				},
+				success:function(data) {
+					message = data;
+				},
+				error:function() {
+					alert("timeout");
+				},
+			});
+		}
+		if(message !== "SUCCESS") {alert(message);return false;}	
 	}
-	if(message !== "SUCCESS") {alert(message);return false;}
 	//add new schedule
-	
+	var timebox = $(".timebox");
+	for(var w=0; w<5; w++) {
+		var blocks = [];
+		var selected = [];
+		// collect choosen boxes (green)
+		for(var j=0; j<13; j++) {
+			if(timebox[5*j+w].style.backgroundColor == 'rgb(121, 215, 97)') {selected.push(j);}
+		}
+		if(selected.length > 0) {
+			var block = [];
+			// divide time periods
+			while(selected.length > 0) {
+				block.push(selected[0]);
+				if((selected[1]-selected[0]) > 1 || selected.length == 1) {
+					blocks.push(block);
+					block = [];
+				}
+				selected.shift();
+			}
+			for (k=0; k<blocks.length; k++) {
+				var start = blocks[k][0];
+				var end = blocks[k][blocks[k].length-1];
+				var start_time = getDate(w)+" "+(start+9).toString()+":00";
+				var end_time = getDate(w)+" "+(end+10).toString()+":00";
+				//post time of schedule
+				var newSchedule = {};
+				newSchedule.UID = id;
+				newSchedule.START_TIME = start_time;
+				newSchedule.END_TIME = end_time;
+				$.ajax({
+					type:"post",
+					url:"http://shawnluxy.ddns.net:80/add_schedule",
+					contentType:"application/x-www-form-urlencoded",
+					data:newSchedule,
+					async:false,
+					timeout:5000,
+					beforeSend:function(xhr){
+						xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
+					},
+					success:function(data) {
+						message = data;
+					},
+					error:function(type) {
+						alert("timeout");
+					},
+				});
+				if(message !== "SUCCESS") {alert(message);return false;}
+			}
+		}	
+	}
+	if(message == "SUCCESS") {alert(message);goStaff();}
 }
 
 //fit the height of sidebar to window size
@@ -263,4 +316,25 @@ function validate(name, gender, age, position, number) {
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+//show selected date in ideal format
+function getDate(index) {
+	var Time = new Date();
+	var today = Time.getDate();
+	var diff = index+1 - Time.getDay();
+	Time.setDate(today+diff);
+	return Time.toISOString().slice(0,10);
+}
+//show current data in yyyy/mm/dd
+function currentDate() {
+	var Time = new Date();
+	var dd = Time.getDate();
+	var mm = Time.getMonth()+1;
+	var yyyy = Time.getFullYear();
+	if(dd<10){
+	    dd='0'+dd} 
+	if(mm<10){
+	    mm='0'+mm} 
+	var today = yyyy+'/'+mm+'/'+dd;
+	return today;
 }

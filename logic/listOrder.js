@@ -137,7 +137,19 @@ function viewOrder() {
 		}(i), true);
 	}
 }
-
+//Search Site filter
+function searchOrder() {
+	var inputs = $("#search").val().toLowerCase();
+	var target = $(".underline");
+	for(var i=0; i<target.length; i++) {
+		var row = $(target[i]).parent();
+		if($(target[i]).text().toLowerCase().indexOf(inputs) > -1) {
+			row.removeAttr("style");
+		} else {
+			row.attr("style", "display:none");
+		}
+	}
+}
 //fit the height of sidebar to window size
 function resize_sidebar() {
 	if($("#datalist").height() <= $(window).innerHeight()) {
