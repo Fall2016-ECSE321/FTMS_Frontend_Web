@@ -57,7 +57,7 @@ function showInfo() {
 		var userid = localStorage.getItem("userID");
 		$.ajax({
 			type:"get",
-			url:"http://shawnluxy.ddns.net:80/staff/" + userid,
+			url:"https://shawnluxy.ddns.net:80/staff/" + userid,
 			async:false,
 			timeout:10000,
 			success:function(data) {
@@ -114,7 +114,7 @@ function change() {
 	//post changes of staff
 	$.ajax({
 		type:"put",
-		url:"http://shawnluxy.ddns.net:80/update_staff",
+		url:"https://shawnluxy.ddns.net:80/update_staff",
 		contentType:"application/x-www-form-urlencoded",
 		data:newStaff,
 		async:false,
@@ -139,7 +139,7 @@ function showSchedule(id) {
 	for(var t=0; t<timebox.length; t++) {timebox[t].style.backgroundColor = 'rgb(107, 186, 185)';}
 	$.ajax({
 		type:"get",
-		url:"http://shawnluxy.ddns.net:80/schedule/" + id,
+		url:"https://shawnluxy.ddns.net:80/schedule/" + id,
 		async:false,
 		timeout:10000,
 		success:function(data) {
@@ -186,7 +186,7 @@ function submitSchedule(id) {
 		for(var i=0; i<scheduleList.length; i++) {
 			$.ajax({
 				type:"delete",
-				url:"http://shawnluxy.ddns.net:80/delete_schedule/" + scheduleList[i].ID,
+				url:"https://shawnluxy.ddns.net:80/delete_schedule/" + scheduleList[i].ID,
 				async:false,
 				timeout:5000,
 				beforeSend:function(xhr){
@@ -234,7 +234,7 @@ function submitSchedule(id) {
 				newSchedule.END_TIME = end_time;
 				$.ajax({
 					type:"post",
-					url:"http://shawnluxy.ddns.net:80/add_schedule",
+					url:"https://shawnluxy.ddns.net:80/add_schedule",
 					contentType:"application/x-www-form-urlencoded",
 					data:newSchedule,
 					async:false,

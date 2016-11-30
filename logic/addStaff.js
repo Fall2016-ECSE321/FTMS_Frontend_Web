@@ -53,7 +53,7 @@ function change() {
 	//post changes
 	$.ajax({
 		type:"post",
-		url:"http://shawnluxy.ddns.net:80/add_staff",
+		url:"https://shawnluxy.ddns.net:80/add_staff",
 		contentType:"application/x-www-form-urlencoded",
 		data:newStaff,
 		async:false,

@@ -51,7 +51,7 @@ function showFoodSelector() {
 	var selector = $("#foodName");
 	$.ajax({
 		type:"get",
-		url:"http://shawnluxy.ddns.net:80/food",
+		url:"https://shawnluxy.ddns.net:80/food",
 		async:false,
 		timeout:10000,
 		success:function(data) {
@@ -77,7 +77,7 @@ function showPicked() {
 		//get all the recipe for the menu
 		$.ajax({
 			type:"get",
-			url:"http://shawnluxy.ddns.net:80/menu/" + menuID,
+			url:"https://shawnluxy.ddns.net:80/menu/" + menuID,
 			async:false,
 			timeout:10000,
 			success:function(data) {
@@ -147,7 +147,7 @@ function submit() {
 		newMenu.POPULARITY = 0;
 		$.ajax({
 			type:"post",
-			url:"http://shawnluxy.ddns.net:80/add_menu",
+			url:"https://shawnluxy.ddns.net:80/add_menu",
 			contentType:"application/x-www-form-urlencoded",
 			data:newMenu,
 			async:false,
@@ -167,7 +167,7 @@ function submit() {
 		newMenu.POPULARITY = JSON.parse(localStorage.getItem("Picked")).POPULARITY;
 		$.ajax({
 			type:"put",
-			url:"http://shawnluxy.ddns.net:80/update_menu",
+			url:"https://shawnluxy.ddns.net:80/update_menu",
 			contentType:"application/x-www-form-urlencoded",
 			data:newMenu,
 			async:false,
@@ -185,7 +185,7 @@ function submit() {
 		for(var i=0; i<recipeList.length; i++) {
 			$.ajax({
 				type:"delete",
-				url:"http://shawnluxy.ddns.net:80/delete_recipe/" + recipeList[i].ID,
+				url:"https://shawnluxy.ddns.net:80/delete_recipe/" + recipeList[i].ID,
 				async:false,
 				timeout:5000,
 				beforeSend:function(xhr){
@@ -213,7 +213,7 @@ function submit() {
 		newRecipe.AMOUNT = amount;
 		$.ajax({
 			type:"post",
-			url:"http://shawnluxy.ddns.net:80/add_recipe",
+			url:"https://shawnluxy.ddns.net:80/add_recipe",
 			contentType:"application/x-www-form-urlencoded",
 			data:newRecipe,
 			async:false,

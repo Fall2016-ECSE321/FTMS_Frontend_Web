@@ -65,7 +65,7 @@ function change() {
 	if(newitem) {
 		$.ajax({
 			type:"post",
-			url:"http://shawnluxy.ddns.net:80/add_equipment",
+			url:"https://shawnluxy.ddns.net:80/add_equipment",
 			contentType:"application/x-www-form-urlencoded",
 			data:newEquip,
 			async:false,
@@ -86,7 +86,7 @@ function change() {
 	} else {
 		$.ajax({
 			type:"put",
-			url:"http://shawnluxy.ddns.net:80/update_equipment",
+			url:"https://shawnluxy.ddns.net:80/update_equipment",
 			contentType:"application/x-www-form-urlencoded",
 			data:newEquip,
 			async:false,

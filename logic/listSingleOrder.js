@@ -52,7 +52,7 @@ function showList() {
 		var table = $(".w3-table");
 		$.ajax({
 			type:"get",
-			url:"http://shawnluxy.ddns.net:80/order/" + order.ID,
+			url:"https://shawnluxy.ddns.net:80/order/" + order.ID,
 			async:false,
 			timeout:10000,
 			success:function(data) {

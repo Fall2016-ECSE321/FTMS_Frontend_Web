@@ -65,7 +65,7 @@ function change() {
 	if(newitem) {
 		$.ajax({
 			type:"post",
-			url:"http://shawnluxy.ddns.net:80/add_food",
+			url:"https://shawnluxy.ddns.net:80/add_food",
 			contentType:"application/x-www-form-urlencoded",
 			data:newFood,
 			async:false,
@@ -86,7 +86,7 @@ function change() {
 	} else {
 		$.ajax({
 			type:"put",
-			url:"http://shawnluxy.ddns.net:80/update_food",
+			url:"https://shawnluxy.ddns.net:80/update_food",
 			contentType:"application/x-www-form-urlencoded",
 			data:newFood,
 			async:false,

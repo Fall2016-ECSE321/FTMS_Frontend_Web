@@ -12,7 +12,7 @@ function login() {
 	
 	$.ajax({
 		type:"post",
-		url:"http://shawnluxy.ddns.net:80/login",
+		url:"https://shawnluxy.ddns.net:80/login",
 		contentType:"application/x-www-form-urlencoded",
 		data:user,
 		timeout:5000,

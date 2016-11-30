@@ -52,7 +52,7 @@ function showList() {
 	var table = $(".w3-table");
 	$.ajax({
 		type:"get",
-		url:"http://shawnluxy.ddns.net:80/menu",
+		url:"https://shawnluxy.ddns.net:80/menu",
 		async:false,
 		timeout:10000,
 		success:function(data) {
@@ -84,7 +84,7 @@ function deleteItem(item) {
 	var recipeList = [];
 	$.ajax({
 		type:"delete",
-		url:"http://shawnluxy.ddns.net:80/delete_menu/" + item.ID,
+		url:"https://shawnluxy.ddns.net:80/delete_menu/" + item.ID,
 		async:false,
 		timeout:5000,
 		beforeSend:function(xhr){
@@ -100,7 +100,7 @@ function deleteItem(item) {
 	if(message !== "SUCCESS") {alert(message);return false;}
 	$.ajax({
 		type:"get",
-		url:"http://shawnluxy.ddns.net:80/menu/" + item.ID,
+		url:"https://shawnluxy.ddns.net:80/menu/" + item.ID,
 		async:false,
 		timeout:5000,
 		success:function(data) {
@@ -116,7 +116,7 @@ function deleteItem(item) {
 	for(var i=0; i<recipeList.length; i++) {
 		$.ajax({
 			type:"delete",
-			url:"http://shawnluxy.ddns.net:80/delete_recipe/" + recipeList[i].ID,
+			url:"https://shawnluxy.ddns.net:80/delete_recipe/" + recipeList[i].ID,
 			async:false,
 			timeout:5000,
 			beforeSend:function(xhr){

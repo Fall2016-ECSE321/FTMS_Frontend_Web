@@ -52,7 +52,7 @@ function showList() {
 	var table = $(".w3-table");
 	$.ajax({
 		type:"get",
-		url:"http://shawnluxy.ddns.net:80/order",
+		url:"https://shawnluxy.ddns.net:80/order",
 		async:false,
 		timeout:10000,
 		success:function(data) {
@@ -86,7 +86,7 @@ function showList() {
 function deleteItem(item) {
 	$.ajax({
 		type:"delete",
-		url:"http://shawnluxy.ddns.net:80/delete_order/" + item.ID,
+		url:"https://shawnluxy.ddns.net:80/delete_order/" + item.ID,
 		async:false,
 		timeout:5000,
 		beforeSend:function(xhr){
