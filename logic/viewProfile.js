@@ -321,7 +321,7 @@ function capitalizeFirstLetter(string) {
 function getDate(index) {
 	var Time = new Date();
 	var today = Time.getDate();
-	var diff = index - Time.getDay();
+	var diff = index+1 - Time.getDay();
 	Time.setDate(today+diff);
 	return Time.toISOString().slice(0,10);
 }
