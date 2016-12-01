@@ -110,6 +110,7 @@ function deleteStaff() {
 		}(i), true);
 	}
 }
+//add event to each staff's name
 function viewStaff() {
 	var view = $('button').filter(function(i){ return $(this).text() === "View"; });
 	for(var i=0; i<view.length; i++) {

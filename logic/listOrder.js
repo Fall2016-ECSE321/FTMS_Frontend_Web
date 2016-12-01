@@ -125,6 +125,7 @@ function editOrder() {
 		}(i), true);
 	}
 }
+//add event to each order's id
 function viewOrder() {
 	var view = $(".underline");
 	for(var i=0; i<view.length; i++) {

@@ -2,14 +2,14 @@
 function initial() {
 	$("#login").on("click", login);
 }
-
+//event handler
 function login() {
 	var user = {};
 	user.USERNAME = $("#username").val();
 	user.PASSWORD = $("#password").val();
 	$("#usererror").text("");
 	$("#passerror").text("");
-	
+	//post user inputs and compare with backend
 	$.ajax({
 		type:"post",
 		url:"https://shawnluxy.ddns.net:80/login",

@@ -41,7 +41,7 @@ function goMenu() {
 function goOrder() {
 	window.location.href = "../page/listOrder.html";
 }
-
+//show the info of chosen item in list pages
 function showPicked() {
 	if(localStorage.getItem("Picked") != null) {
 		var food = JSON.parse(localStorage.getItem("Picked"));
@@ -52,7 +52,7 @@ function showPicked() {
 		raw_name = food.NAME.toString();
 	}
 }
-
+//event handler - post changed info to backend
 function change() {
 	var newFood = {};
 	newFood.NAME = $("#foodName").val();

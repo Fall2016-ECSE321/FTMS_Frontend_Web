@@ -157,6 +157,7 @@ function editMenu() {
 		}(i), true);
 	}
 }
+//add event to each menu's name
 function viewMenu() {
 	var view = $(".underline");
 	for(var i=0; i<view.length; i++) {

@@ -17,7 +17,7 @@ function initial() {
 	newitem = true;
 	showPicked();
 }
-
+//window navigation handler
 function logout() {
 	window.location.href = "../index.html";
 }
@@ -41,7 +41,7 @@ function goMenu() {
 function goOrder() {
 	window.location.href = "../page/listOrder.html";
 }
-
+//show the info of chosen item in list pages
 function showPicked() {
 	if(localStorage.getItem("Picked") != null) {
 		var equip = JSON.parse(localStorage.getItem("Picked"));
@@ -52,7 +52,7 @@ function showPicked() {
 		raw_name = equip.NAME.toString();
 	}
 }
-
+//event handler - post changed info to backend
 function change() {
 	var newEquip = {};
 	newEquip.NAME = $("#name").val();
