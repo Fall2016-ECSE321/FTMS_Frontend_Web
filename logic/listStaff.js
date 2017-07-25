@@ -1,17 +1,10 @@
-
 var staffList = [];
 
 function initial() {
 	//navigate buttons
-	$("#logout").on("click",logout);
 	$(".glyphicon-plus").on("click",addStaff);
 	//navigate side bar 
-	$("#goProfile").on("click",goProfile);
-	$("#goStaff").on("click",goStaff);
-	$("#goFood").on("click",goFood);
-	$("#goEquipment").on("click",goEquipment);
-	$("#goMenu").on("click",goMenu);
-	$("#goOrder").on("click",goOrder);
+	navigation();
 	
 	showList();
 	resize_sidebar();
@@ -19,39 +12,12 @@ function initial() {
 	deleteStaff();
 }
 
-function logout() {
-	window.location.href = "../index.html";
-}
-function addStaff() {
-	window.location.href = "../page/addStaff.html";
-}
-
-function goProfile() {
-	window.location.href = "../page/viewProfile.html";
-	localStorage.removeItem("viewPicked");
-}
-function goStaff() {
-	window.location.href = "../page/listStaff.html";
-}
-function goFood() {
-	window.location.href = "../page/listFood.html";
-}
-function goEquipment() {
-	window.location.href = "../page/listEquipment.html";
-}
-function goMenu() {
-	window.location.href = "../page/listMenu.html";
-}
-function goOrder() {
-	window.location.href = "../page/listOrder.html";
-}
-
 //show all items in the Equipment table
 function showList() {
 	var table = $(".w3-table");
 	$.ajax({
 		type:"get",
-		url:"https://shawnluxy.ddns.net:80/staff",
+		url:server+"/staff",
 		async:false,
 		timeout:10000,
 		success:function(data) {
@@ -80,68 +46,19 @@ function showList() {
 	});
 }
 //delete chosen item
-function deleteItem(item) {
-	$.ajax({
-		type:"delete",
-		url:"https://shawnluxy.ddns.net:80/delete_staff/" + item.ID,
-		async:false,
-		timeout:5000,
-		beforeSend:function(xhr){
-			xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
-		},
-		success:function(data) {
-			alert(data);
-			goStaff();
-		},
-		error:function() {
-			alert("timeout");
-		},
-	});
-}
-//add event to each icon
 function deleteStaff() {
-	var trash = $('button').filter(function(i){ return $(this).text() === "Delete"; });
-	for(var i=0; i<trash.length; i++) {
-		trash[i].addEventListener("click",function(index){
-			return function (){
-				var staff = staffList[index];
-				deleteItem(staff);
-			};
-		}(i), true);
-	}
+    var target = $('button').filter(function(i){ return $(this).text() === "Delete"; });
+    var message = deletes(target, staffList, "/delete_staff/", "ID");
+    if(message=="SUCCESS"){
+        goOrder();
+    }
 }
 //add event to each staff's name
 function viewStaff() {
 	var view = $('button').filter(function(i){ return $(this).text() === "View"; });
-	for(var i=0; i<view.length; i++) {
-		view[i].addEventListener("click",function(index){
-			return function (){
-				var staff = staffList[index];
-				localStorage.setItem("viewPicked", JSON.stringify(staff));
-				window.location.href = "viewProfile.html";
-			};
-		}(i), true);
-	}
+    editItem(view, staffList, "viewProfile.html");
 }
 //Search Site filter
 function searchStaff() {
-	var inputs = $("#search").val().toLowerCase();
-	var target = $(".sname");
-	for(var i=0; i<target.length; i++) {
-		var row = $(target[i]).parent();
-		if($(target[i]).text().toLowerCase().indexOf(inputs) > -1) {
-			row.removeAttr("style");
-		} else {
-			row.attr("style", "display:none");
-		}
-	}
-}
-//fit the height of sidebar to window size
-function resize_sidebar() {
-	if($("#datalist").height() <= $(window).innerHeight()) {
-		$("#side-bar").height($(window).innerHeight());
-	} else {
-		h = $("#datalist").height() + 180;
-		$("#side-bar").height(h);
-	}
+    search(".sname");
 }

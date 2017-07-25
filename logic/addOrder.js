@@ -3,55 +3,24 @@ var menuList = [];
 
 function initial() {
 	//navigate buttons
-	$("#logout").on("click",logout);
 	$(".glyphicon-plus").on("click",addOrder);
 	$("#change").on("click",submit);
 	$("#cancel").on("click",goOrder);
 	//navigate side bar 
-	$("#goProfile").on("click",goProfile);
-	$("#goStaff").on("click",goStaff);
-	$("#goFood").on("click",goFood);
-	$("#goEquipment").on("click",goEquipment);
-	$("#goMenu").on("click",goMenu);
-	$("#goOrder").on("click",goOrder);
+    navigation();
 	
 	newitem = true;
 	showMenuSelector();
 	showPicked();
 	resize_sidebar();
 	deleteOrder();
-	
-}
-
-function logout() {
-	window.location.href = "../index.html";
-}
-
-function goProfile() {
-	window.location.href = "../page/viewProfile.html";
-	localStorage.removeItem("viewPicked");
-}
-function goStaff() {
-	window.location.href = "../page/listStaff.html";
-}
-function goFood() {
-	window.location.href = "../page/listFood.html";
-}
-function goEquipment() {
-	window.location.href = "../page/listEquipment.html";
-}
-function goMenu() {
-	window.location.href = "../page/listMenu.html";
-}
-function goOrder() {
-	window.location.href = "../page/listOrder.html";
 }
 
 function showMenuSelector() {
 	var selector = $("#dishes");
 	$.ajax({
 		type:"get",
-		url:"https://shawnluxy.ddns.net:80/menu",
+		url:server+'/menu',
 		async:false,
 		timeout:10000,
 		success:function(data) {
@@ -78,7 +47,7 @@ function showPicked() {
 		//get all the order's menu
 		$.ajax({
 			type:"get",
-			url:"https://shawnluxy.ddns.net:80/order/" + orderID,
+			url:server+'/order/' + orderID,
 			async:false,
 			timeout:10000,
 			success:function(data) {
@@ -114,7 +83,7 @@ function addOrder() {
 	if(newOrder.DISHES == "Choose dishes") {
 		$("#dishesError").text("Please choose dishes"); return false;
 	} else {$("#dishesError").text("");}
-	if(!validate(newOrder.QUANTITY)){return false;}
+	if(!qValudation(newOrder.QUANTITY)){return false;}
 	//add to the table
 	var table = $(".w3-table-all");
 	var row = $('<tr></tr>').appendTo(table);
@@ -147,49 +116,20 @@ function submit() {
 		$("#statusError").text("Please choose status"); return false;
 	} else {$("#statusError").text("");}
 	//update menu
+    var reqType;
+    var URL;
 	if(newitem) {
 		newOrder.ID = randomString(32);
-		$.ajax({
-			type:"post",
-			url:"https://shawnluxy.ddns.net:80/add_order",
-			contentType:"application/x-www-form-urlencoded",
-			data:newOrder,
-			async:false,
-			timeout:5000,
-			beforeSend:function(xhr){
-				xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
-			},
-			success:function(data) {
-				message = data;
-			},
-			error:function(type) {
-				alert("timeout");
-			},
-		});
+        reqType = 'post';
+        URL = server+'/add_order';
 	} else {
 		newOrder.ID = JSON.parse(localStorage.getItem("Picked")).ID;
-		$.ajax({
-			type:"put",
-			url:"https://shawnluxy.ddns.net:80/update_order",
-			contentType:"application/x-www-form-urlencoded",
-			data:newOrder,
-			async:false,
-			timeout:5000,
-			beforeSend:function(xhr){
-				xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
-			},
-			success:function(data) {
-				message = data;
-			},
-			error:function(type) {
-				alert("timeout");
-			},
-		});
+        reqType = 'put';
+        URL = server+'/update_order';
 		for(var i=0; i<menuList.length; i++) {
-			console.log(menuList[i].ID);
 			$.ajax({
 				type:"delete",
-				url:"https://shawnluxy.ddns.net:80/delete_orderlist/" + menuList[i].ID,
+				url:server+'/delete_orderlist/' + menuList[i].ID,
 				async:false,
 				timeout:5000,
 				beforeSend:function(xhr){
@@ -204,6 +144,23 @@ function submit() {
 			});
 		}
 	}
+    $.ajax({
+        type:reqType,
+        url:URL,
+        contentType:"application/x-www-form-urlencoded",
+        data:newOrder,
+        async:false,
+        timeout:5000,
+        beforeSend:function(xhr){
+            xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
+        },
+        success:function(data) {
+            message = data;
+        },
+        error:function(type) {
+            alert("timeout");
+        },
+    });
 	if(message !== "SUCCESS") {alert(message);return false;}
 	
 	var newMenu = {};
@@ -219,7 +176,7 @@ function submit() {
 		newMenu.AMOUNT = amount;
 		$.ajax({
 			type:"post",
-			url:"https://shawnluxy.ddns.net:80/add_orderlist",
+			url:server+'/add_orderlist',
 			contentType:"application/x-www-form-urlencoded",
 			data:newMenu,
 			async:false,
@@ -238,41 +195,8 @@ function submit() {
 	alert(message);
 	if(message == "SUCCESS") {goOrder();}
 }
-//validation check
-function validate(quantity) {
-	var status = true;
-	var regex1 = /^[0-9]+$/;
-	// check quantity input
-	if(quantity.trim().length == 0) {
-		$("#quantityError").text("Quantity cannot be Empty");status = false;
-	} else if(!quantity.match(regex1) ||  parseInt(quantity)==0) {
-		$("#quantityError").text("Quantity must be a Positive Integer");status = false;
-	} else {
-		$("#quantityError").text("");
-	}
-	return status;
-}
-//fit the height of sidebar to window size
-function resize_sidebar() {
-	if($("#datalist").height() <= $(window).innerHeight()) {
-		$("#side-bar").height($(window).innerHeight());
-	} else {
-		h = $("#datalist").height() + 180;
-		$("#side-bar").height(h);
-	}
-}
 //show current time in ideal format
 function getTime() {
 	var Time = new Date();
 	return Time.toISOString().slice(0,10) + " " + Time.getHours() + ":" + Time.getMinutes() + ":" + Time.getSeconds();
-}
-
-function randomString(len) {
-	var chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
-	var max = chars.length;
-	var str = "";
-	for (i=0; i<len; i++) {
-		str += chars.charAt(Math.floor(Math.random() * max));
-	}
-	return str;
 }

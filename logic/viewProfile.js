@@ -3,43 +3,13 @@ var scheduleList = [];
 
 function initial() {
 	//navigate buttons
-	$("#logout").on("click",logout);
 	$("#Edit").on("click",editInfo);
 	//navigate side bar 
-	$("#goProfile").on("click",goProfile);
-	$("#goStaff").on("click",goStaff);
-	$("#goFood").on("click",goFood);
-	$("#goEquipment").on("click",goEquipment);
-	$("#goMenu").on("click",goMenu);
-	$("#goOrder").on("click",goOrder);
+	navigation();
 	
 	resize_sidebar();
 	showInfo();
 	
-}
-
-function logout() {
-	window.location.href = "../index.html";
-}
-
-function goProfile() {
-	window.location.href = "../page/viewProfile.html";
-	localStorage.removeItem("viewPicked");
-}
-function goStaff() {
-	window.location.href = "../page/listStaff.html";
-}
-function goFood() {
-	window.location.href = "../page/listFood.html";
-}
-function goEquipment() {
-	window.location.href = "../page/listEquipment.html";
-}
-function goMenu() {
-	window.location.href = "../page/listMenu.html";
-}
-function goOrder() {
-	window.location.href = "../page/listOrder.html";
 }
 
 function showInfo() {
@@ -57,7 +27,7 @@ function showInfo() {
 		var userid = localStorage.getItem("userID");
 		$.ajax({
 			type:"get",
-			url:"https://shawnluxy.ddns.net:80/staff/" + userid,
+			url:server+"/staff/" + userid,
 			async:false,
 			timeout:10000,
 			success:function(data) {
@@ -114,7 +84,7 @@ function change() {
 	//post changes of staff
 	$.ajax({
 		type:"put",
-		url:"https://shawnluxy.ddns.net:80/update_staff",
+		url:server+"/update_staff",
 		contentType:"application/x-www-form-urlencoded",
 		data:newStaff,
 		async:false,
@@ -139,7 +109,7 @@ function showSchedule(id) {
 	for(var t=0; t<timebox.length; t++) {timebox[t].style.backgroundColor = 'rgb(107, 186, 185)';}
 	$.ajax({
 		type:"get",
-		url:"https://shawnluxy.ddns.net:80/schedule/" + id,
+		url:server+"/schedule/" + id,
 		async:false,
 		timeout:10000,
 		success:function(data) {
@@ -186,7 +156,7 @@ function submitSchedule(id) {
 		for(var i=0; i<scheduleList.length; i++) {
 			$.ajax({
 				type:"delete",
-				url:"https://shawnluxy.ddns.net:80/delete_schedule/" + scheduleList[i].ID,
+				url:server+"/delete_schedule/" + scheduleList[i].ID,
 				async:false,
 				timeout:5000,
 				beforeSend:function(xhr){
@@ -234,7 +204,7 @@ function submitSchedule(id) {
 				newSchedule.END_TIME = end_time;
 				$.ajax({
 					type:"post",
-					url:"https://shawnluxy.ddns.net:80/add_schedule",
+					url:server+"/add_schedule",
 					contentType:"application/x-www-form-urlencoded",
 					data:newSchedule,
 					async:false,
@@ -254,16 +224,6 @@ function submitSchedule(id) {
 		}	
 	}
 	if(message == "SUCCESS") {alert(message);goStaff();}
-}
-
-//fit the height of sidebar to window size
-function resize_sidebar() {
-	if($("#datalist").height() <= $(window).innerHeight()) {
-		$("#side-bar").height($(window).innerHeight());
-	} else {
-		h = $("#datalist").height() + 180;
-		$("#side-bar").height(h);
-	}
 }
 
 //validation check

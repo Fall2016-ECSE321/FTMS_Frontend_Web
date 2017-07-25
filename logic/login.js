@@ -12,7 +12,7 @@ function login() {
 	//post user inputs and compare with backend
 	$.ajax({
 		type:"post",
-		url:"https://shawnluxy.ddns.net:80/login",
+		url:server+"/login",
 		contentType:"application/x-www-form-urlencoded",
 		data:user,
 		timeout:5000,

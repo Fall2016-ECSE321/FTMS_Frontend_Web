@@ -1,41 +1,11 @@
 
 function initial() {
 	//navigate buttons
-	$("#logout").on("click",logout);
 	$("#change").on("click",change);
 	$("#cancel").on("click",goStaff);
 	//navigate side bar 
-	$("#goProfile").on("click",goProfile);
-	$("#goStaff").on("click",goStaff);
-	$("#goFood").on("click",goFood);
-	$("#goEquipment").on("click",goEquipment);
-	$("#goMenu").on("click",goMenu);
-	$("#goOrder").on("click",goOrder);
+    navigation();
 	
-}
-
-function logout() {
-	window.location.href = "../index.html";
-}
-
-function goProfile() {
-	window.location.href = "../page/viewProfile.html";
-	localStorage.removeItem("viewPicked");
-}
-function goStaff() {
-	window.location.href = "../page/listStaff.html";
-}
-function goFood() {
-	window.location.href = "../page/listFood.html";
-}
-function goEquipment() {
-	window.location.href = "../page/listEquipment.html";
-}
-function goMenu() {
-	window.location.href = "../page/listMenu.html";
-}
-function goOrder() {
-	window.location.href = "../page/listOrder.html";
 }
 
 function change() {
@@ -53,7 +23,7 @@ function change() {
 	//post changes
 	$.ajax({
 		type:"post",
-		url:"https://shawnluxy.ddns.net:80/add_staff",
+		url:server+"/add_staff",
 		contentType:"application/x-www-form-urlencoded",
 		data:newStaff,
 		async:false,
@@ -134,16 +104,6 @@ function validate(name, gender, age, position, number, username, passwd) {
 		$("#passwdError").text("");
 	}
 	return status;
-}
-
-function randomString(len) {
-	var chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
-	var max = chars.length;
-	var str = "";
-	for (i=0; i<len; i++) {
-		str += chars.charAt(Math.floor(Math.random() * max));
-	}
-	return str;
 }
 
 function capitalizeFirstLetter(string) {

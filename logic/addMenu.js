@@ -3,55 +3,25 @@ var recipeList = [];
 
 function initial() {
 	//navigate buttons
-	$("#logout").on("click",logout);
 	$(".glyphicon-plus").on("click",addRecipe);
 	$("#change").on("click",submit);
 	$("#cancel").on("click",goMenu);
 	//navigate side bar 
-	$("#goProfile").on("click",goProfile);
-	$("#goStaff").on("click",goStaff);
-	$("#goFood").on("click",goFood);
-	$("#goEquipment").on("click",goEquipment);
-	$("#goMenu").on("click",goMenu);
-	$("#goOrder").on("click",goOrder);
+	navigation();
 	
 	newitem = true;
 	showFoodSelector();
 	showPicked();
 	resize_sidebar();
 	deleteRecipe();
-	
-}
 
-function logout() {
-	window.location.href = "../index.html";
-}
-
-function goProfile() {
-	window.location.href = "../page/viewProfile.html";
-	localStorage.removeItem("viewPicked");
-}
-function goStaff() {
-	window.location.href = "../page/listStaff.html";
-}
-function goFood() {
-	window.location.href = "../page/listFood.html";
-}
-function goEquipment() {
-	window.location.href = "../page/listEquipment.html";
-}
-function goMenu() {
-	window.location.href = "../page/listMenu.html";
-}
-function goOrder() {
-	window.location.href = "../page/listOrder.html";
 }
 
 function showFoodSelector() {
 	var selector = $("#foodName");
 	$.ajax({
 		type:"get",
-		url:"https://shawnluxy.ddns.net:80/food",
+		url:server+'/food',
 		async:false,
 		timeout:10000,
 		success:function(data) {
@@ -77,7 +47,7 @@ function showPicked() {
 		//get all the recipe for the menu
 		$.ajax({
 			type:"get",
-			url:"https://shawnluxy.ddns.net:80/menu/" + menuID,
+			url:server+'/menu/' + menuID,
 			async:false,
 			timeout:10000,
 			success:function(data) {
@@ -111,7 +81,7 @@ function addRecipe() {
 	if(newRecipe.FOOD == "Choose food") {
 		$("#foodError").text("Please choose a food"); return false;
 	} else {$("#foodError").text("");}
-	if(!validate("name", newRecipe.QUANTITY, "1")){return false;}
+	if(!qValudation(newRecipe.QUANTITY)){return false;}
 	//add to the table
 	var table = $(".w3-table-all");
 	var row = $('<tr></tr>').appendTo(table);
@@ -140,52 +110,25 @@ function submit() {
 	newMenu.NAME = $("#menuName").val();
 	newMenu.PRICE = $("#menuPrice").val();
 	//check input validation
-	if(!validate(newMenu.NAME, "1", newMenu.PRICE)){return false;}
+    if(!(nValudation(newMenu.NAME) && pValudation(newMenu.PRICE))){return false;}
 	//update menu
+	var reqType;
+    var URL;
 	if(newitem) {
 		newMenu.ID = randomString(32);
 		newMenu.POPULARITY = 0;
-		$.ajax({
-			type:"post",
-			url:"https://shawnluxy.ddns.net:80/add_menu",
-			contentType:"application/x-www-form-urlencoded",
-			data:newMenu,
-			async:false,
-			timeout:5000,
-			beforeSend:function(xhr){
-				xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
-			},
-			success:function(data) {
-				message = data;
-			},
-			error:function(type) {
-				alert("timeout");
-			},
-		});
+		reqType = 'post';
+		URL = server+'/add_menu';
 	} else {
 		newMenu.ID = JSON.parse(localStorage.getItem("Picked")).ID;
 		newMenu.POPULARITY = JSON.parse(localStorage.getItem("Picked")).POPULARITY;
-		$.ajax({
-			type:"put",
-			url:"https://shawnluxy.ddns.net:80/update_menu",
-			contentType:"application/x-www-form-urlencoded",
-			data:newMenu,
-			async:false,
-			timeout:5000,
-			beforeSend:function(xhr){
-				xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
-			},
-			success:function(data) {
-				message = data;
-			},
-			error:function(type) {
-				alert("timeout");
-			},
-		});
+        reqType = 'put';
+        URL = server+'/update_menu';
+
 		for(var i=0; i<recipeList.length; i++) {
 			$.ajax({
 				type:"delete",
-				url:"https://shawnluxy.ddns.net:80/delete_recipe/" + recipeList[i].ID,
+				url:server+'/delete_recipe/' + recipeList[i].ID,
 				async:false,
 				timeout:5000,
 				beforeSend:function(xhr){
@@ -200,6 +143,23 @@ function submit() {
 			});
 		}
 	}
+    $.ajax({
+        type:reqType,
+        url:URL,
+        contentType:"application/x-www-form-urlencoded",
+        data:newMenu,
+        async:false,
+        timeout:5000,
+        beforeSend:function(xhr){
+            xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"));
+        },
+        success:function(data) {
+            message = data;
+        },
+        error:function(type) {
+            alert("timeout");
+        },
+    });
 	if(message !== "SUCCESS") {alert(message);return false;}
 	
 	var newRecipe = {};
@@ -213,7 +173,7 @@ function submit() {
 		newRecipe.AMOUNT = amount;
 		$.ajax({
 			type:"post",
-			url:"https://shawnluxy.ddns.net:80/add_recipe",
+			url:server+'/add_recipe',
 			contentType:"application/x-www-form-urlencoded",
 			data:newRecipe,
 			async:false,
@@ -231,54 +191,4 @@ function submit() {
 	}
 	alert(message);
 	if(message == "SUCCESS") {goMenu();}
-}
-//validation check
-function validate(name, quantity, price) {
-	var status = true;
-	var regex1 = /^[0-9]+$/;
-	var regex2 = /^[0-9.]+$/;
-	// check name input
-	if(name.trim().length == 0) {
-		$("#nameError").text("Name cannot be Empty");status = false;
-	} else if(name[0].match(regex1)) {
-		$("#nameError").text("Name cannot start with Number");status = false;
-	} else {
-		$("#nameError").text("");
-	}
-	// check quantity input
-	if(quantity.trim().length == 0) {
-		$("#quantityError").text("Quantity cannot be Empty");status = false;
-	} else if(!quantity.match(regex1) ||  parseInt(quantity)==0) {
-		$("#quantityError").text("Quantity must be a Positive Integer");status = false;
-	} else {
-		$("#quantityError").text("");
-	}
-	// check price input
-	if(price.trim().length == 0) {
-		$("#priceError").text("Price cannot be Empty");status = false;
-	} else if(!price.match(regex2) || parseFloat(price)==0) {
-		$("#priceError").text("Price must be a Positive Number");status = false;
-	} else {
-		$("#priceError").text("");
-	}
-	return status;
-}
-//fit the height of sidebar to window size
-function resize_sidebar() {
-	if($("#datalist").height() <= $(window).innerHeight()) {
-		$("#side-bar").height($(window).innerHeight());
-	} else {
-		h = $("#datalist").height() + 180;
-		$("#side-bar").height(h);
-	}
-}
-
-function randomString(len) {
-	var chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
-	var max = chars.length;
-	var str = "";
-	for (i=0; i<len; i++) {
-		str += chars.charAt(Math.floor(Math.random() * max));
-	}
-	return str;
 }
